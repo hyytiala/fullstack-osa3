@@ -1,8 +1,6 @@
-POST http://localhost:3001/notes
+POST http://localhost:3001/api/notes
 Content-type: application/json
 
 {
-    "content": "Toimii",
-    "important": true,
-    "date": "Wed, 21 Oct 2015 18:27:50 GMT"
+    "content": "Toimiikohan"
 }

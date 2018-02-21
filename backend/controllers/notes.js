@@ -10,64 +10,59 @@ const formatNote = (note) => {
     }
 }
 
-notesRouter.get('/', (request, response) => {
-    Note
-        .find({})
-        .then(notes => {
-            response.json(notes.map(formatNote))
-        })
+notesRouter.get('/', async (request, response) => {
+    const notes = await Note.find({})
+    response.json(notes.map(formatNote))
 })
 
-notesRouter.get('/:id', (request, response) => {
-    Note
-        .findById(request.params.id)
-        .then(note => {
-            if (note) {
-                response.json(formatNote(note))
-            } else {
-                response.status(404).end()
-            }
-        })
-        .catch(error => {
-            response.status(400).send({ error: 'malformatted id' })
-        })
-})
-
-notesRouter.delete('/:id', (request, response) => {
-    Note
-        .findByIdAndRemove(request.params.id)
-        .then(result => {
-            console.log(result)
-            response.status(204).end()
-        })
-        .catch(error => {
-            response.status(400).send({ error: 'malformatted id' })
-        })
-})
-
-notesRouter.post('/', (request, response) => {
-    const body = request.body
-
-    if (body.content === undefined) {
-        response.status(400).json({ error: 'content missing' })
+notesRouter.get('/:id', async (request, response) => {
+    try {
+      const note = await Note.findById(request.params.id)
+  
+      if (note) {
+        response.json(formatNote(note))
+      } else {
+        response.status(404).end()
+      }
+  
+    } catch (exception) {
+      console.log(exception)
+      response.status(400).send({ error: 'malformatted id' })
     }
+  })
 
-    const note = new Note({
+  notesRouter.delete('/:id', async (request, response) => {
+    try {
+      await Note.findByIdAndRemove(request.params.id)
+  
+      response.status(204).end()
+    } catch (exception) {
+      console.log(exception)
+      response.status(400).send({ error: 'malformatted id' })
+    }
+  })
+
+notesRouter.post('/', async (request, response) => {
+    try {
+      const body = request.body
+  
+      if (body.content === undefined) {
+        return response.status(400).json({ error: 'content missing' })
+      }
+  
+      const note = new Note({
         content: body.content,
         important: body.important === undefined ? false : body.important,
         date: new Date()
-    })
-
-    note
-        .save()
-        .then(note => {
-            return formatNote(note)
-        })
-        .then(formattedNote => {
-            response.json(formattedNote)
-        })
-
-})
+      })
+  
+      const savedNote = await note.save()
+      response.json(formatNote(note))
+    } catch (exception) {
+      console.log(exception)
+      response.status(500).json({ error: 'something went wrong...' })
+    }
+  })
 
 notesRouter.put('/:id', (request, response) => {
     const body = request.body

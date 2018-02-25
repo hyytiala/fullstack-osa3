@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/notes
+Content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI1YTkyN2NjYTdjMjliMTNiMjhmZmIyNjEiLCJpYXQiOjE1MTk1NTA5MDR9.Tuu4vSp_SW2LJ3OF6J2B1gHMp46eL1WVQx8CrYReiew
+
+{
+    "content": "toimiiko tokenilla",
+    "important": true,
+    "userId": "5a927cca7c29b13b28ffb261"
+}
